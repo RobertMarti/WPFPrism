@@ -2,6 +2,7 @@
 using Autofac;
 using Prism.Autofac;
 using SimpleHmi.PlcService;
+using VVM.Views;
 using VVM.Views.SimpleHmi;
 
 namespace VVM
@@ -10,7 +11,11 @@ namespace VVM
     {
         protected override DependencyObject CreateShell()
         {
-            return Container.Resolve<Views.Menu>();
+            MessageBox.Show("SimpleHmi");
+            return Container.Resolve<MainWindow>();
+
+            MessageBox.Show("Menu");
+            return Container.Resolve<Menu>();
         }
 
         protected override void InitializeShell()

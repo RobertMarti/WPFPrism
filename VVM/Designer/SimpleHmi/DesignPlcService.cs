@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SimpleHmi.PlcService;
 
-namespace VVM.Designer.SimpleHmi
+namespace VVM.Designer
 {
     class DesignPlcService : IPlcService
     {

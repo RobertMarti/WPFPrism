@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using Prism.Regions;
 using SimpleHmi.Infrastructure;
+using VVM.Views;
 using VVM.Views.SimpleHmi;
 
 namespace VVM.ViewModels.SimpleHmi

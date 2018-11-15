@@ -1,7 +1,7 @@
-﻿using VVM.Designer.SimpleHmi;
+﻿using VVM.ViewModels;
 using VVM.ViewModels.SimpleHmi;
 
-namespace VVM.Designer.SimpleHmi
+namespace VVM.Designer
 {
     class DesignMainPageViewModel : MainPageViewModel 
     {

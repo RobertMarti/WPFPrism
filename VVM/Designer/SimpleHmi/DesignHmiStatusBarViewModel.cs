@@ -1,6 +1,7 @@
-﻿using VVM.ViewModels.SimpleHmi;
+﻿using VVM.ViewModels;
+using VVM.ViewModels.SimpleHmi;
 
-namespace VVM.Designer.SimpleHmi
+namespace VVM.Designer
 {
     class DesignHmiStatusBarViewModel : HmiStatusBarViewModel
     {
