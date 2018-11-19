@@ -1,0 +1,29 @@
+﻿<Window
+    x:Class="VVM.Views.Shell"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:prism="http://prismlibrary.com/"
+    Title="MainWindow"
+    Width="800"
+    Height="400"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_AsyncAwait">
+                <MenuItem Command="{Binding AsyncAwaitCommand}" Header="_AsyncAwait" />
+                <MenuItem Command="{Binding AsyncAwaitWithCancelTaskCommand}" Header="AsyncAwaitWith_CancelTask" />
+            </MenuItem>
+            <MenuItem Header="_SimpleHmi">
+                <MenuItem Command="{Binding SimpleHmiCommand}" Header="_SimpleHmi" />
+            </MenuItem>
+        </Menu>
+        <TextBox AcceptsReturn="True" />
+
+        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+    </DockPanel>
+
+</Window>

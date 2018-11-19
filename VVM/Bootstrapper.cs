@@ -11,8 +11,8 @@ namespace VVM
     {
         protected override DependencyObject CreateShell()
         {
-            MessageBox.Show("SimpleHmi");
-            return Container.Resolve<MainWindow>();
+            //MessageBox.Show("SimpleHmi");
+            //return Container.Resolve<MainWindow>();
 
             MessageBox.Show("Menu");
             return Container.Resolve<Menu>();
