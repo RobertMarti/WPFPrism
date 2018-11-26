@@ -15,6 +15,9 @@ namespace ConcurrencyPrism.ViewModels.Designer
     public ICommand GetHtmlAsync2Command { get; }
     public ICommand GetHtmlAsyncCommand { get; }
     public ICommand GetHtmlCommand { get; }
+    public ICommand CalculateParallelCommand { get; }
+    public ICommand CancelParallelCommand { get; }
+
     public bool IsProgressBarVisible { get; set; }
     public int Calculate(int n)
     {

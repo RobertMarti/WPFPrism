@@ -10,7 +10,7 @@
   xmlns:mvvm="http://prismlibrary.com/"
   Title="Concurrency"
   Width="800"
-  Height="450"
+  Height="400"
   d:DataContext="{d:DesignInstance designer:DesignConcurrencyViewModel,
                                    IsDesignTimeCreatable=True}"
   mvvm:ViewModelLocator.AutoWireViewModel="True"
@@ -20,9 +20,8 @@
     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
   </Window.Resources>
 
-  <Grid>
+  <Grid Margin="0,0,0,0">
     <Grid.RowDefinitions>
-      <RowDefinition />
       <RowDefinition />
       <RowDefinition />
       <RowDefinition />
@@ -30,6 +29,7 @@
       <RowDefinition />
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
+      <ColumnDefinition />
       <ColumnDefinition />
       <ColumnDefinition />
       <ColumnDefinition />
@@ -48,24 +48,24 @@
       x:Name="BtnGetHtml"
       Grid.Row="1"
       Grid.Column="0"
-      Width="150"
-      Height="40"
+      Width="120"
+      Height="30"
       Command="{Binding GetHtmlCommand}"
       Content="GetHtml" />
     <Button
       x:Name="BtnGetHtmlAsync"
       Grid.Row="2"
       Grid.Column="0"
-      Width="150"
-      Height="40"
+      Width="120"
+      Height="30"
       Command="{Binding GetHtmlAsyncCommand}"
       Content="GetHtmlAsync" />
     <Button
       x:Name="BtnGetHtmlAsync2"
       Grid.Row="3"
       Grid.Column="0"
-      Width="150"
-      Height="40"
+      Width="120"
+      Height="30"
       Command="{Binding GetHtmlAsync2Command}"
       Content="GetHtmlAsync" />
 
@@ -80,20 +80,20 @@
       FontWeight="Bold" />
     <Button
       x:Name="BtnCalculate"
-      Grid.Row="2"
+      Grid.Row="1"
       Grid.Column="1"
-      Width="150"
-      Height="40"
+      Width="120"
+      Height="30"
       Command="{Binding CalculateCommand}"
-      Content="BtnCalculate" />
+      Content="Calculate" />
     <Button
       x:Name="BtnCalculateAsync"
-      Grid.Row="3"
+      Grid.Row="2"
       Grid.Column="1"
-      Width="150"
-      Height="40"
+      Width="120"
+      Height="30"
       Command="{Binding CalculateAsyncCommand}"
-      Content="BtnCalculateAsync" />
+      Content="CalculateAsync" />
 
     <!--  CPU Bound Multi  -->
     <Label
@@ -106,40 +106,72 @@
       FontWeight="Bold" />
     <Button
       x:Name="BtnCalculateMulti"
-      Grid.Row="2"
+      Grid.Row="1"
       Grid.Column="2"
-      Width="200"
-      Height="40"
+      Width="160"
+      Height="30"
       Command="{Binding CalculateMultiCommand}"
-      Content="BtnCalculateMulti" />
+      Content="CalculateMulti" />
     <Button
       x:Name="BtnCalculateMultiAsync"
-      Grid.Row="3"
+      Grid.Row="2"
       Grid.Column="2"
-      Width="200"
-      Height="40"
+      Width="160"
+      Height="30"
       Command="{Binding CalculateMultiAsyncCommand}"
       Content="Calculate Multi Async" />
     <Button
       x:Name="BtnCancelTask"
-      Grid.Row="4"
+      Grid.Row="3"
       Grid.Column="2"
-      Width="200"
-      Height="40"
+      Width="160"
+      Height="30"
       Command="{Binding CancelTaskCommand}"
-      Content="Cancel Task" />
+      Content="Cancel Tasks" />
+
+    <!--  CPU Bound Parallel  -->
+    <Label
+      Grid.Row="0"
+      Grid.Column="2"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"
+      Content="CPU Bound Multi"
+      FontSize="20"
+      FontWeight="Bold" />
+    <Button
+      x:Name="BtnCalculateParallel"
+      Grid.Row="1"
+      Grid.Column="3"
+      Width="160"
+      Height="30"
+      Content="CalculateMulti" />
+    <Button
+      x:Name="BtnCalculateParallel2"
+      Grid.Row="2"
+      Grid.Column="3"
+      Width="160"
+      Height="30"
+      Command="{Binding CalculateParallelCommand}"
+      Content="Calculate Parallel" />
+    <Button
+      x:Name="BtnCanceleParallel"
+      Grid.Row="3"
+      Grid.Column="3"
+      Width="160"
+      Height="30"
+      Command="{Binding CancelParallelCommand}"
+      Content="Cancel Parallel" />
 
     <!--  ProgressBar  -->
     <ProgressBar
       x:Name="Progress"
-      Grid.Row="5"
+      Grid.Row="4"
       Grid.Column="0"
-      Grid.ColumnSpan="3"
+      Grid.ColumnSpan="4"
       Height="20"
       Margin="10,10,10,10"
       HorizontalContentAlignment="Stretch"
       IsIndeterminate="true"
-      Visibility="{Binding IsProgressBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
-      Value="{Binding CurrentProgress}" />
+      Visibility="{Binding IsProgressBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
   </Grid>
 </Window>

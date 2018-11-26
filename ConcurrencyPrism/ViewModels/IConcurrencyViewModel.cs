@@ -13,11 +13,10 @@ namespace ConcurrencyPrism.ViewModels
     ICommand GetHtmlAsync2Command { get; }
     ICommand GetHtmlAsyncCommand { get; }
     ICommand GetHtmlCommand { get; }
+    ICommand CalculateParallelCommand { get; }
+    ICommand CancelParallelCommand { get; }
+    
+      
     bool IsProgressBarVisible { get; set; }
-
-    int Calculate(int n);
-    void CancelTask();
-    Task<string> GetHtmlAsync(string url);
-    Task<int> StartCalculateAsync(int n);
   }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,10 +18,13 @@ namespace ConcurrencyPrism.ViewModels
   public class ConcurrencyViewModel : BindableBase, IConcurrencyViewModel
   {
 
-    private const int Anzahl = 10;
+    private const int Anzahl = 20;
 
-    private CancellationToken[] _cancellationToken = new CancellationToken[Anzahl];
-    private CancellationTokenSource[] _cancellationTokenSource = new CancellationTokenSource[Anzahl];
+    private CancellationToken[] _cancellationTokens = new CancellationToken[Anzahl];
+    private CancellationTokenSource[] _cancellationTokenSources = new CancellationTokenSource[Anzahl];
+
+    private CancellationToken _cancellationToken = new CancellationToken();
+    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
     #region Properties
 
@@ -31,7 +35,6 @@ namespace ConcurrencyPrism.ViewModels
       get { return _isProgressBarVisible; }
       set { SetProperty(ref _isProgressBarVisible, value); }
     }
-
 
     #endregion
 
@@ -45,16 +48,12 @@ namespace ConcurrencyPrism.ViewModels
     public ICommand CalculateMultiCommand { get; }
     public ICommand CalculateMultiAsyncCommand { get; }
     public ICommand CancelTaskCommand { get; }
+    public ICommand CalculateParallelCommand { get; }
+    public ICommand CancelParallelCommand { get; }
 
     #endregion
 
     #region Constructors
-
-    //public ConcurrencyViewModel()
-    //{
-        
-    //}
-
     public ConcurrencyViewModel()
     {
       GetHtmlCommand = new DelegateCommand(GetHtml);
@@ -65,6 +64,8 @@ namespace ConcurrencyPrism.ViewModels
       CalculateMultiCommand = new DelegateCommand(CalculateMulti);
       CalculateMultiAsyncCommand = new DelegateCommand(CalculateMultiAsync);
       CancelTaskCommand = new DelegateCommand(CancelTask);
+      CalculateParallelCommand = new DelegateCommand(CalculateParallel);
+      CancelParallelCommand = new DelegateCommand(CancelParallel);
 
       IsProgressBarVisible = false;
     }
@@ -101,170 +102,15 @@ namespace ConcurrencyPrism.ViewModels
       MessageBox.Show(html.Substring(0, 100));
     }
 
-    public async Task<string> GetHtmlAsync(string url)
+    private async Task<string> GetHtmlAsync(string url)
     {
       var webClient = new WebClient();
       return await webClient.DownloadStringTaskAsync(new Uri(url));
     }
 
     #endregion
-
-    ////#region CPU Bound
-
-    ////private void Calculate()
-    ////{
-    ////  int nSquare = Calculate(3);
-    ////  MessageBox.Show(nSquare.ToString());
-    ////}
-
-    ////private async void CalculateAsync()
-    ////{
-    ////  Task<int> taskSquare = StartCalculateAsync(3);
-
-    ////  IsProgressBarVisible = true;
-
-    ////  int nSquare = await taskSquare;
-
-    ////  IsProgressBarVisible = false;
-
-    ////  MessageBox.Show(nSquare.ToString());
-    ////}
-
-    ////private void CalculateMulti()
-    ////{
-    ////  DateTime StartZeit = DateTime.Now;
-
-    ////  List<int> results = new List<int>();
-    ////  for (int i = 0; i < Anzahl; i++)
-    ////  {
-    ////    results.Add(i);
-    ////    results[i] = Calculate(i);
-    ////  }
-
-    ////  //Nur zur Illustration
-    ////  IsProgressBarVisible = true;
-    ////  IsProgressBarVisible = false;
-
-    ////  string sSquares = "";
-    ////  for (int i = 0; i < Anzahl; i++)
-    ////  {
-    ////    if (sSquares != "") sSquares += ",";
-
-    ////    sSquares += results[i];
-    ////  }
-
-    ////  DateTime EndZeit = DateTime.Now;
-    ////  TimeSpan GemessendeZeit = EndZeit - StartZeit;
-
-    ////  MessageBox.Show($"GemessendeZeit: {GemessendeZeit}", sSquares);
-    ////}
-
-    ////private async void CalculateMultiAsync()
-    ////{
-    ////  DateTime StartZeit = DateTime.Now;
-
-    ////  List<TaskResult> taskResults = new List<TaskResult>();
-    ////  for (int i = 0; i < Anzahl; i++)
-    ////  {
-    ////    Task<int> taskSquare = StartCalculateAsync(i);
-    ////    taskResults.Add(new TaskResult(i, taskSquare));
-    ////  }
-
-    ////  IsProgressBarVisible = true;
-
-    ////  foreach (var taskResult in taskResults)
-    ////  {
-    ////    int nSquare = await taskResult.Task;
-    ////    taskResults[taskResult.Key].Square = nSquare;
-    ////  }
-
-    ////  //IEnumerable<Task> tasks = taskResults.Select(x => x.Task);
-    ////  //await Task.WhenAll(tasks);
-
-    ////  IsProgressBarVisible = false;
-
-    ////  string sSquares = "";
-    ////  for (int i = 0; i < Anzahl; i++)
-    ////  {
-    ////    if (sSquares != "") sSquares += ",";
-
-    ////    sSquares += taskResults[i].Square;
-    ////  }
-
-    ////  DateTime EndZeit = DateTime.Now;
-    ////  TimeSpan GemessendeZeit = EndZeit - StartZeit;
-
-    ////  MessageBox.Show($"GemessendeZeit: {GemessendeZeit}", sSquares);
-    ////}
-
-
-    ////public Task<int> StartCalculateAsync(int n)
-    ////{
-    ////  _cancellationTokenSource[n] = new CancellationTokenSource();
-    ////  _cancellationToken[n] = _cancellationTokenSource[n].Token;
-    ////  _cancellationToken[n].Register(TaskCancelled, n);
-
-    ////  Func<int> calculate = () => Calculate(n);
-
-    ////  //return Task.Factory.StartNew(calculate, _cancellationToken[n]);
-
-    ////  //Shortcut ab .Net 4.5
-    ////  return Task.Run(calculate, _cancellationToken[n]);
-    ////}
-
-    ////private void TaskCancelled(object n)
-    ////{
-    ////  Debug.WriteLine($"Task {n} Cancelled");
-    ////  //MessageBox.Show($"Task {n} Cancelled");
-    ////}
-
-    ////#endregion
-
-    ////#region Common
-
-    ////private class TaskResult
-    ////{
-    ////  public TaskResult(int key, Task<int> task)
-    ////  {
-    ////    Key = key;
-    ////    Square = 0;
-    ////    Task = task;
-    ////  }
-
-    ////  public int Key { get; set; }
-    ////  public int Square { get; set; }
-    ////  public Task<int> Task { get; set; }
-    ////}
-
-    ////public int Calculate(int n)
-    ////{
-    ////  //Lange Rechenoparation: ca 1 Sekunden
-    ////  for (int i = 0; i < 100000; i++)
-    ////  {
-    ////    for (int j = 0; j < 3000; j++)
-    ////    {
-    ////      //_cancellationToken[n].ThrowIfCancellationRequested(); -- gibt Exceptions ???
-
-    ////      if (_cancellationToken[n].IsCancellationRequested) return -1;
-
-    ////      int z = i * j;
-    ////    }
-    ////  }
-
-    ////  return n * n;
-    ////}
-
-    ////public void CancelTask()
-    ////{
-    ////  for (var n = 0; n < Anzahl; n++)
-    ////  {
-    ////    _cancellationTokenSource[n].Cancel();
-    ////  }
-    ////}
-
-    ////#endregion
     
-    #region CPU Bound
+    #region CPU Bound Wait
 
     private void Calculate()
     {
@@ -294,7 +140,7 @@ namespace ConcurrencyPrism.ViewModels
     {
       Debug.WriteLine("CalculateMulti Startet");
 
-      DateTime startZeit = DateTime.Now;
+      var stopWatch = Stopwatch.StartNew();
 
       List<int> results = new List<int>();
       for (int i = 0; i < Anzahl; i++)
@@ -315,15 +161,14 @@ namespace ConcurrencyPrism.ViewModels
         sSquares += results[i];
       }
 
-      DateTime endZeit = DateTime.Now;
-      TimeSpan gemessendeZeit = endZeit - startZeit;
-
-      MessageBox.Show($"GemessendeZeit: {gemessendeZeit}", sSquares);
+      MessageBox.Show($"GemessendeZeit: {stopWatch.Elapsed.TotalSeconds}", sSquares);
     }
 
     private async void CalculateMultiAsync()
     {
-      DateTime startZeit = DateTime.Now;
+      IsProgressBarVisible = true;
+
+      var stopWatch = Stopwatch.StartNew();
 
       List<TaskResult> taskResults = new List<TaskResult>();
       for (int i = 0; i < Anzahl; i++)
@@ -332,14 +177,12 @@ namespace ConcurrencyPrism.ViewModels
         taskResults.Add(new TaskResult(i, taskSquare));
       }
 
-      IsProgressBarVisible = true;
-
       try
       {
         await Calculate(taskResults);
 
         IsProgressBarVisible = false;
-        Output(taskResults, startZeit);
+        Output(taskResults, stopWatch.Elapsed.TotalSeconds);
       }
       catch (OperationCanceledException)
       {
@@ -348,7 +191,7 @@ namespace ConcurrencyPrism.ViewModels
       }
     }
 
-    private static void Output(List<TaskResult> taskResults, DateTime startZeit)
+    private static void Output(List<TaskResult> taskResults, double elapsedTime)
     {
       string sSquares = "";
       for (int i = 0; i < Anzahl; i++)
@@ -358,10 +201,7 @@ namespace ConcurrencyPrism.ViewModels
         sSquares += taskResults[i].Square;
       }
 
-      DateTime endZeit = DateTime.Now;
-      TimeSpan gemessendeZeit = endZeit - startZeit;
-
-      MessageBox.Show($"GemessendeZeit: {gemessendeZeit}", sSquares);
+      MessageBox.Show($"GemessendeZeit: {elapsedTime}", sSquares);
     }
 
     private async Task Calculate(List<TaskResult> taskResults)
@@ -377,22 +217,22 @@ namespace ConcurrencyPrism.ViewModels
     {
       for (var n = 0; n < Anzahl; n++)
       {
-        _cancellationTokenSource[n].Cancel();
+        _cancellationTokenSources[n].Cancel();
       }
     }
 
     public Task<int> StartCalculateAsync(int n)
     {
-      _cancellationTokenSource[n] = new CancellationTokenSource();
-      _cancellationToken[n] = _cancellationTokenSource[n].Token;
-      _cancellationToken[n].Register(TaskCancelled, n);
+      _cancellationTokenSources[n] = new CancellationTokenSource();
+      _cancellationTokens[n] = _cancellationTokenSources[n].Token;
+      _cancellationTokens[n].Register(TaskCancelled, n);
 
       Func<int> calculate = () => Calculate(n);
 
       //return Task.Factory.StartNew(calculate, _cancellationToken[n]);
 
       //Shortcut ab .Net 4.5
-      return Task.Run(calculate, _cancellationToken[n]);
+      return Task.Run(calculate, _cancellationTokens[n]);
     }
 
     private void TaskCancelled(object n)
@@ -400,11 +240,6 @@ namespace ConcurrencyPrism.ViewModels
       Debug.WriteLine($"Task {n} Cancelled");
       //MessageBox.Show($"Task {n} Cancelled");
     }
-
-#endregion
-
-    #region Common
-
     private class TaskResult
     {
       public TaskResult(int key, Task<int> task)
@@ -418,7 +253,7 @@ namespace ConcurrencyPrism.ViewModels
       public Task<int> Task { get; set; }
     }
 
-    public int Calculate(int n)
+    private int Calculate(int n)
     {
       //Lange Rechenoparation: ca 1 Sekunden
       for (int i = 0; i < 100000; i++)
@@ -427,7 +262,7 @@ namespace ConcurrencyPrism.ViewModels
         {
           //_cancellationToken[n].ThrowIfCancellationRequested(); -- gibt Exceptions ???
 
-          if (_cancellationToken[n].IsCancellationRequested) return -1;
+          if (_cancellationTokens[n].IsCancellationRequested) return -1;
 
           int z = i * j;
         }
@@ -436,10 +271,95 @@ namespace ConcurrencyPrism.ViewModels
       return n * n;
     }
 
-    void IConcurrencyViewModel.CancelTask()
+    #endregion
+
+    #region CPU Bound Parallel
+    private async void CalculateParallel()
     {
-      throw new NotImplementedException();
+      var stopWatch = Stopwatch.StartNew();
+      IsProgressBarVisible = true;
+
+      var results = new List<Result>();
+      for (var i = 0; i < Anzahl; i++)
+      {
+        results.Add(new Result(i));
+      }
+
+      Action action = () => Parallel.ForEach(results, new ParallelOptions(), CalculateParallel);
+      ProvideCancellation();
+
+      //Aktion in Threadpool ausführen,m damit der UI-Thread nicht blockiert wird
+      Task task = Task.Run(action , _cancellationToken);
+      await task;
+
+      IsProgressBarVisible = false;
+      Output(results, stopWatch.Elapsed.TotalSeconds);
     }
+
+    private void ProvideCancellation()
+    {
+      _cancellationTokenSource = new CancellationTokenSource();
+      _cancellationToken = _cancellationTokenSource.Token;
+      _cancellationToken.Register(TaskCancelled);
+    }
+
+    private void CalculateParallel(Result result)
+    {
+      result.Square = CalculateParallel(result.Key);
+    }
+
+    private int CalculateParallel(int n)
+    {
+      //Lange Rechenoparation: ca 1 Sekunden
+      for (int i = 0; i < 100000; i++)
+      {
+        for (int j = 0; j < 3000; j++)
+        {
+          if (_cancellationToken.IsCancellationRequested) return -1;
+          int z = i * j;
+        }
+      }
+
+      return n * n;
+    }
+
+    private void CancelParallel()
+    {
+      _cancellationTokenSource.Cancel();
+    }
+
+    private void TaskCancelled()
+    {
+      Debug.WriteLine($"Parallel.Foreach Cancelled");
+    }
+
+    private static void Output(List<Result> results, double elapsedTime)
+    {
+      string sSquares = "";
+      for (int i = 0; i < Anzahl; i++)
+      {
+        if (sSquares != "") sSquares += ",";
+
+        sSquares += results[i].Square;
+      }
+
+      MessageBox.Show($"GemessendeZeit: {elapsedTime}", sSquares);
+    }
+
+    private class Result
+    {
+      public Result(int key)
+      {
+        Key = key;
+        Square = 0;
+      }
+      public int Key { get; set; }
+      public int Square { get; set; }
+    }
+
+    #endregion
+
+    #region Common
 
     #endregion
 
