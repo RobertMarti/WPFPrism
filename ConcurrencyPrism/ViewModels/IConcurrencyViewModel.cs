@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using Prism.Commands;
 
 namespace ConcurrencyPrism.ViewModels
 {

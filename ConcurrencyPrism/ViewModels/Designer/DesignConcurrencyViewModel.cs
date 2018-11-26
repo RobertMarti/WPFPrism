@@ -19,6 +19,7 @@ namespace ConcurrencyPrism.ViewModels.Designer
     public ICommand CancelParallelCommand { get; }
 
     public bool IsProgressBarVisible { get; set; }
+    public bool IsResultVisible { get; set; }
     public int Calculate(int n)
     {
       throw new NotImplementedException();

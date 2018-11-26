@@ -18,15 +18,19 @@ namespace ConcurrencyPrism.ViewModels
   public class ConcurrencyViewModel : BindableBase, IConcurrencyViewModel
   {
 
-    private const int Anzahl = 20;
+    private CancellationToken[] _cancellationTokens;
+    private CancellationTokenSource[] _cancellationTokenSources;
 
-    private CancellationToken[] _cancellationTokens = new CancellationToken[Anzahl];
-    private CancellationTokenSource[] _cancellationTokenSources = new CancellationTokenSource[Anzahl];
-
-    private CancellationToken _cancellationToken = new CancellationToken();
+    private CancellationToken _cancellationToken;
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
     #region Properties
+
+    public int Anzahl { get; set; }
+
+    #endregion
+
+    #region Bindable Properties
 
     private bool _isProgressBarVisible;
 
@@ -34,6 +38,22 @@ namespace ConcurrencyPrism.ViewModels
     {
       get { return _isProgressBarVisible; }
       set { SetProperty(ref _isProgressBarVisible, value); }
+    }
+
+    private bool _isResultVisible;
+
+    public bool IsResultVisible
+    {
+      get { return _isResultVisible; }
+      set { SetProperty(ref _isResultVisible, value); }
+    }
+
+    private string _resultOutput;
+
+    public string ResultOutput
+    {
+      get { return _resultOutput; }
+      set { SetProperty(ref _resultOutput, value); }
     }
 
     #endregion
@@ -68,6 +88,9 @@ namespace ConcurrencyPrism.ViewModels
       CancelParallelCommand = new DelegateCommand(CancelParallel);
 
       IsProgressBarVisible = false;
+      IsResultVisible = false;
+
+      Anzahl = 10;
     }
 
     #endregion
@@ -161,7 +184,8 @@ namespace ConcurrencyPrism.ViewModels
         sSquares += results[i];
       }
 
-      MessageBox.Show($"GemessendeZeit: {stopWatch.Elapsed.TotalSeconds}", sSquares);
+      //MessageBox.Show($"GemessendeZeit: {stopWatch.Elapsed.TotalSeconds}", sSquares);
+      ResultOutput = $"GemessendeZeit: {stopWatch.Elapsed.TotalSeconds}: {sSquares}";
     }
 
     private async void CalculateMultiAsync()
@@ -191,7 +215,7 @@ namespace ConcurrencyPrism.ViewModels
       }
     }
 
-    private static void Output(List<TaskResult> taskResults, double elapsedTime)
+    private void Output(List<TaskResult> taskResults, double elapsedTime)
     {
       string sSquares = "";
       for (int i = 0; i < Anzahl; i++)
@@ -223,7 +247,9 @@ namespace ConcurrencyPrism.ViewModels
 
     public Task<int> StartCalculateAsync(int n)
     {
+      _cancellationTokenSources = new CancellationTokenSource[Anzahl];
       _cancellationTokenSources[n] = new CancellationTokenSource();
+      _cancellationTokens = new CancellationToken[Anzahl];
       _cancellationTokens[n] = _cancellationTokenSources[n].Token;
       _cancellationTokens[n].Register(TaskCancelled, n);
 
@@ -333,7 +359,7 @@ namespace ConcurrencyPrism.ViewModels
       Debug.WriteLine($"Parallel.Foreach Cancelled");
     }
 
-    private static void Output(List<Result> results, double elapsedTime)
+    private void Output(List<Result> results, double elapsedTime)
     {
       string sSquares = "";
       for (int i = 0; i < Anzahl; i++)
@@ -343,7 +369,8 @@ namespace ConcurrencyPrism.ViewModels
         sSquares += results[i].Square;
       }
 
-      MessageBox.Show($"GemessendeZeit: {elapsedTime}", sSquares);
+      //MessageBox.Show($"GemessendeZeit: {elapsedTime}", sSquares);
+      ResultOutput = $"GemessendeZeit: {elapsedTime}: {sSquares}";
     }
 
     private class Result

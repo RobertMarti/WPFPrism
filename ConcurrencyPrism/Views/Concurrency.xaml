@@ -132,19 +132,12 @@
     <!--  CPU Bound Parallel  -->
     <Label
       Grid.Row="0"
-      Grid.Column="2"
+      Grid.Column="3"
       HorizontalAlignment="Center"
       VerticalAlignment="Center"
-      Content="CPU Bound Multi"
+      Content="CPU Bound Parallel"
       FontSize="20"
       FontWeight="Bold" />
-    <Button
-      x:Name="BtnCalculateParallel"
-      Grid.Row="1"
-      Grid.Column="3"
-      Width="160"
-      Height="30"
-      Content="CalculateMulti" />
     <Button
       x:Name="BtnCalculateParallel2"
       Grid.Row="2"
@@ -173,5 +166,16 @@
       HorizontalContentAlignment="Stretch"
       IsIndeterminate="true"
       Visibility="{Binding IsProgressBarVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+    <!--  Result  -->
+    <TextBlock
+      x:Name="ResultOutput"
+      Grid.Row="4"
+      Grid.Column="0"
+      Grid.ColumnSpan="4"
+      Height="20"
+      Margin="10,10,10,10"
+      Text="Binding {ResultOutput}"
+      Visibility="{Binding IsResultVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
   </Grid>
 </Window>
