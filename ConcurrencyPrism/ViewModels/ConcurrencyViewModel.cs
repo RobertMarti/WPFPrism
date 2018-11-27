@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using ConcurrencyPrism.Infrastructure;
+using ConcurrencyPrism.Infrastructure.AwaitableDelegateCommand;
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -18,22 +21,42 @@ namespace ConcurrencyPrism.ViewModels
   public class ConcurrencyViewModel : BindableBase, IConcurrencyViewModel
   {
 
+    #region declarations
+
     private CancellationToken[] _cancellationTokens;
     private CancellationTokenSource[] _cancellationTokenSources;
 
     private CancellationToken _cancellationToken;
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-    #region Properties
-
-    public int Anzahl { get; set; }
+    private Stopwatch _stopWatch = new Stopwatch();
 
     #endregion
 
     #region Bindable Properties
 
-    private bool _isProgressBarVisible;
+    private int _anzahl;
+    public int Anzahl
+    {
+      get { return _anzahl; }
+      set { SetProperty(ref _anzahl, value); }
+    }
 
+    private string _resultOutput;
+    public string ResultOutput
+    {
+      get { return _resultOutput; }
+      set { SetProperty(ref _resultOutput, value); }
+    }
+
+    private string _elapsedTime;
+    public string ResultElapsedTime
+    {
+      get { return _elapsedTime; }
+      set { SetProperty(ref _elapsedTime, value); }
+    }
+
+    private bool _isProgressBarVisible;
     public bool IsProgressBarVisible
     {
       get { return _isProgressBarVisible; }
@@ -41,35 +64,27 @@ namespace ConcurrencyPrism.ViewModels
     }
 
     private bool _isResultVisible;
-
     public bool IsResultVisible
     {
       get { return _isResultVisible; }
       set { SetProperty(ref _isResultVisible, value); }
     }
 
-    private string _resultOutput;
-
-    public string ResultOutput
-    {
-      get { return _resultOutput; }
-      set { SetProperty(ref _resultOutput, value); }
-    }
-
     #endregion
 
     #region Commands
 
-    public ICommand GetHtmlCommand { get; }
-    public ICommand GetHtmlAsyncCommand { get; }
-    public ICommand GetHtmlAsync2Command { get; }
-    public ICommand CalculateCommand { get; }
-    public ICommand CalculateAsyncCommand { get; }
-    public ICommand CalculateMultiCommand { get; }
-    public ICommand CalculateMultiAsyncCommand { get; }
-    public ICommand CancelTaskCommand { get; }
-    public ICommand CalculateParallelCommand { get; }
-    public ICommand CancelParallelCommand { get; }
+    public DelegateCommand GetHtmlCommand { get; }
+    public DelegateCommand GetHtmlAsyncCommand { get; }
+    public DelegateCommand GetHtmlAsync2Command { get; }
+    public DelegateCommand CalculateCommand { get; }
+    public AwaitableDelegateCommand CalculateAsyncCommand { get; }
+    public DelegateCommand CalculateMultiCommand { get; }
+    public AwaitableDelegateCommand CalculateMultiAsyncCommand { get; }
+    public DelegateCommand CancelTaskCommand { get; }
+    public AwaitableDelegateCommand CalculateParallelCommand { get; }
+    public DelegateCommand CancelParallelCommand { get; }
+    int IConcurrencyViewModel.Anzahl { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
     #endregion
 
@@ -80,11 +95,11 @@ namespace ConcurrencyPrism.ViewModels
       GetHtmlAsyncCommand = new DelegateCommand(GetHtmlAsync);
       GetHtmlAsync2Command = new DelegateCommand(GetHtmlAsync2);
       CalculateCommand = new DelegateCommand(Calculate);
-      CalculateAsyncCommand = new DelegateCommand(CalculateAsync);
+      CalculateAsyncCommand = new AwaitableDelegateCommand(CalculateAsync);
       CalculateMultiCommand = new DelegateCommand(CalculateMulti);
-      CalculateMultiAsyncCommand = new DelegateCommand(CalculateMultiAsync);
-      CancelTaskCommand = new DelegateCommand(CancelTask);
-      CalculateParallelCommand = new DelegateCommand(CalculateParallel);
+      CalculateMultiAsyncCommand = new AwaitableDelegateCommand(CalculateMultiAsync);
+      CancelTaskCommand = new DelegateCommand(CancelTasks);
+      CalculateParallelCommand = new AwaitableDelegateCommand(CalculateParallelAsync);
       CancelParallelCommand = new DelegateCommand(CancelParallel);
 
       IsProgressBarVisible = false;
@@ -139,61 +154,40 @@ namespace ConcurrencyPrism.ViewModels
     {
       int nSquare = Calculate(3);
 
-      //Nur zur Illustration
-      IsProgressBarVisible = true;
-      IsProgressBarVisible = false;
-
       MessageBox.Show(nSquare.ToString());
     }
 
-    private async void CalculateAsync()
+    private async Task CalculateAsync()
     {
-      Task<int> taskSquare = StartCalculateAsync(3);
+      StartCalculation();
 
-      IsProgressBarVisible = true;
+      Task<int> taskSquare = StartCalculateAsync(3);
 
       int nSquare = await taskSquare;
 
-      IsProgressBarVisible = false;
-
-      MessageBox.Show(nSquare.ToString());
+      EndCalculation(new List<int> { nSquare });
     }
 
     private void CalculateMulti()
     {
       Debug.WriteLine("CalculateMulti Startet");
 
-      var stopWatch = Stopwatch.StartNew();
+      StartCalculation();
 
-      List<int> results = new List<int>();
+      List<int> squares = new List<int>();
       for (int i = 0; i < Anzahl; i++)
       {
-        results.Add(i);
-        results[i] = Calculate(i);
+        squares.Add(i);
+        squares[i] = Calculate(i);
       }
 
-      //Nur zur Illustration
-      IsProgressBarVisible = true;
-      IsProgressBarVisible = false;
-
-      string sSquares = "";
-      for (int i = 0; i < Anzahl; i++)
-      {
-        if (sSquares != "") sSquares += ",";
-
-        sSquares += results[i];
-      }
-
-      //MessageBox.Show($"GemessendeZeit: {stopWatch.Elapsed.TotalSeconds}", sSquares);
-      ResultOutput = $"GemessendeZeit: {stopWatch.Elapsed.TotalSeconds}: {sSquares}";
+      EndCalculation(squares);
     }
 
-    private async void CalculateMultiAsync()
+    private async Task CalculateMultiAsync()
     {
-      IsProgressBarVisible = true;
-
-      var stopWatch = Stopwatch.StartNew();
-
+      StartCalculation();
+      
       List<TaskResult> taskResults = new List<TaskResult>();
       for (int i = 0; i < Anzahl; i++)
       {
@@ -205,27 +199,12 @@ namespace ConcurrencyPrism.ViewModels
       {
         await Calculate(taskResults);
 
-        IsProgressBarVisible = false;
-        Output(taskResults, stopWatch.Elapsed.TotalSeconds);
+        EndCalculation(taskResults);
       }
       catch (OperationCanceledException)
       {
-        IsProgressBarVisible = false;
-        MessageBox.Show("Tasks Cancelled");
+        CancelCalculation();
       }
-    }
-
-    private void Output(List<TaskResult> taskResults, double elapsedTime)
-    {
-      string sSquares = "";
-      for (int i = 0; i < Anzahl; i++)
-      {
-        if (sSquares != "") sSquares += ",";
-
-        sSquares += taskResults[i].Square;
-      }
-
-      MessageBox.Show($"GemessendeZeit: {elapsedTime}", sSquares);
     }
 
     private async Task Calculate(List<TaskResult> taskResults)
@@ -237,7 +216,7 @@ namespace ConcurrencyPrism.ViewModels
       }
     }
 
-    private void CancelTask()
+    private void CancelTasks()
     {
       for (var n = 0; n < Anzahl; n++)
       {
@@ -288,7 +267,10 @@ namespace ConcurrencyPrism.ViewModels
         {
           //_cancellationToken[n].ThrowIfCancellationRequested(); -- gibt Exceptions ???
 
-          if (_cancellationTokens[n].IsCancellationRequested) return -1;
+          if (_cancellationTokens != null)
+          {
+            if (_cancellationTokens[n].IsCancellationRequested) return -1;
+          }
 
           int z = i * j;
         }
@@ -300,10 +282,10 @@ namespace ConcurrencyPrism.ViewModels
     #endregion
 
     #region CPU Bound Parallel
-    private async void CalculateParallel()
+
+    private async Task CalculateParallelAsync()
     {
-      var stopWatch = Stopwatch.StartNew();
-      IsProgressBarVisible = true;
+      StartCalculation();
 
       var results = new List<Result>();
       for (var i = 0; i < Anzahl; i++)
@@ -318,8 +300,10 @@ namespace ConcurrencyPrism.ViewModels
       Task task = Task.Run(action , _cancellationToken);
       await task;
 
-      IsProgressBarVisible = false;
-      Output(results, stopWatch.Elapsed.TotalSeconds);
+      if (!_cancellationToken.IsCancellationRequested)
+      {
+        EndCalculation(results);
+      }
     }
 
     private void ProvideCancellation()
@@ -356,21 +340,8 @@ namespace ConcurrencyPrism.ViewModels
 
     private void TaskCancelled()
     {
-      Debug.WriteLine($"Parallel.Foreach Cancelled");
-    }
-
-    private void Output(List<Result> results, double elapsedTime)
-    {
-      string sSquares = "";
-      for (int i = 0; i < Anzahl; i++)
-      {
-        if (sSquares != "") sSquares += ",";
-
-        sSquares += results[i].Square;
-      }
-
-      //MessageBox.Show($"GemessendeZeit: {elapsedTime}", sSquares);
-      ResultOutput = $"GemessendeZeit: {elapsedTime}: {sSquares}";
+      ////Debug.WriteLine($"Parallel.Foreach Cancelled");
+      CancelCalculation();
     }
 
     private class Result
@@ -387,6 +358,60 @@ namespace ConcurrencyPrism.ViewModels
     #endregion
 
     #region Common
+
+    private void StartCalculation()
+    {
+      _stopWatch.Restart();
+
+      IsProgressBarVisible = true;
+      IsResultVisible = false;
+    }
+
+    private void EndCalculation(List<Result> results)
+    {
+      List<int> squares = new List<int>();
+      foreach (var result in results)
+      {
+        squares.Add(result.Square);
+      }
+
+      EndCalculation(squares);
+    }
+
+    private void EndCalculation(List<TaskResult> results)
+    {
+      List<int> squares = new List<int>();
+      foreach (var result in results)
+      {
+        squares.Add(result.Square);
+      }
+
+      EndCalculation(squares);
+    }
+
+    private void EndCalculation(List<int> squares)
+    {
+      StringBuilder sb = new StringBuilder();
+      foreach (var square in squares)
+      {
+        if (sb.Length > 0) sb.Append(",");
+
+        sb.Append(square);
+      }
+
+      IsProgressBarVisible = false;
+      IsResultVisible = true;
+      ResultOutput = sb.ToString();
+      ResultElapsedTime = $"GemessendeZeit: {_stopWatch.Elapsed.TotalSeconds}";
+    }
+
+    private void CancelCalculation()
+    {
+      IsProgressBarVisible = false;
+      IsResultVisible = true;
+      ResultOutput = "Calculation Cancelled";
+      ResultElapsedTime = $"GemessendeZeit: {_stopWatch.Elapsed.TotalSeconds}";
+    }
 
     #endregion
 

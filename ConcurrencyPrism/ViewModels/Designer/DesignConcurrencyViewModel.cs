@@ -1,25 +1,50 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ConcurrencyPrism.Infrastructure;
+using ConcurrencyPrism.Infrastructure.AwaitableDelegateCommand;
+using Prism.Commands;
 
 namespace ConcurrencyPrism.ViewModels.Designer
 {
   class DesignConcurrencyViewModel : IConcurrencyViewModel
   {
+    public int Anzahl { get; set; }
 
-    public ICommand CalculateAsyncCommand { get; }
-    public ICommand CalculateCommand { get; }
-    public ICommand CalculateMultiAsyncCommand { get; }
-    public ICommand CalculateMultiCommand { get; }
-    public ICommand CancelTaskCommand { get; }
-    public ICommand GetHtmlAsync2Command { get; }
-    public ICommand GetHtmlAsyncCommand { get; }
-    public ICommand GetHtmlCommand { get; }
-    public ICommand CalculateParallelCommand { get; }
-    public ICommand CancelParallelCommand { get; }
+    public AwaitableDelegateCommand CalculateAsyncCommand { get; }
+    public DelegateCommand CalculateCommand { get; }
+    public AwaitableDelegateCommand CalculateMultiAsyncCommand { get; }
+    public DelegateCommand CalculateMultiCommand { get; }
+    public DelegateCommand CancelTaskCommand { get; }
+    public DelegateCommand GetHtmlAsync2Command { get; }
+    public DelegateCommand GetHtmlAsyncCommand { get; }
+    public DelegateCommand GetHtmlCommand { get; }
+    public AwaitableDelegateCommand CalculateParallelCommand { get; }
+    public DelegateCommand CancelParallelCommand { get; }
 
-    public bool IsProgressBarVisible { get; set; }
-    public bool IsResultVisible { get; set; }
+    public string ResultOutput
+    {
+      get => "1,4,9,16,25";
+      set => throw new NotImplementedException();
+    }
+
+    public string ResultElapsedTime
+    {
+      get => "GemessendeZeit: 3.3";
+      set => throw new NotImplementedException();
+    }
+
+    public bool IsProgressBarVisible
+    {
+      get => false;
+      set => throw new NotImplementedException();
+    }
+    public bool IsResultVisible
+    {
+      get => true;
+      set => throw new NotImplementedException();
+    }
+
     public int Calculate(int n)
     {
       throw new NotImplementedException();

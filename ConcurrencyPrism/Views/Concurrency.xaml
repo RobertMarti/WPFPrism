@@ -27,6 +27,7 @@
       <RowDefinition />
       <RowDefinition />
       <RowDefinition />
+      <RowDefinition />
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition />
@@ -35,9 +36,26 @@
       <ColumnDefinition />
     </Grid.ColumnDefinitions>
 
-    <!--  I/O Bound  -->
     <Label
       Grid.Row="0"
+      Grid.Column="0"
+      HorizontalAlignment="Left"
+      VerticalAlignment="Center"
+      Content="Anzahl"
+      FontSize="12" />
+
+    <TextBox
+      x:Name="Anzahl"
+      Grid.Row="0"
+      Grid.Column="1"
+      HorizontalAlignment="Left"
+      VerticalAlignment="Center"
+      FontSize="12"
+      Text="{Binding Anzahl}" />
+
+    <!--  I/O Bound  -->
+    <Label
+      Grid.Row="1"
       Grid.Column="0"
       HorizontalAlignment="Center"
       VerticalAlignment="Center"
@@ -46,7 +64,7 @@
       FontWeight="Bold" />
     <Button
       x:Name="BtnGetHtml"
-      Grid.Row="1"
+      Grid.Row="2"
       Grid.Column="0"
       Width="120"
       Height="30"
@@ -54,7 +72,7 @@
       Content="GetHtml" />
     <Button
       x:Name="BtnGetHtmlAsync"
-      Grid.Row="2"
+      Grid.Row="3"
       Grid.Column="0"
       Width="120"
       Height="30"
@@ -62,7 +80,7 @@
       Content="GetHtmlAsync" />
     <Button
       x:Name="BtnGetHtmlAsync2"
-      Grid.Row="3"
+      Grid.Row="4"
       Grid.Column="0"
       Width="120"
       Height="30"
@@ -71,7 +89,7 @@
 
     <!--  CPU Bound  -->
     <Label
-      Grid.Row="0"
+      Grid.Row="1"
       Grid.Column="1"
       HorizontalAlignment="Center"
       VerticalAlignment="Center"
@@ -80,7 +98,7 @@
       FontWeight="Bold" />
     <Button
       x:Name="BtnCalculate"
-      Grid.Row="1"
+      Grid.Row="2"
       Grid.Column="1"
       Width="120"
       Height="30"
@@ -88,7 +106,7 @@
       Content="Calculate" />
     <Button
       x:Name="BtnCalculateAsync"
-      Grid.Row="2"
+      Grid.Row="3"
       Grid.Column="1"
       Width="120"
       Height="30"
@@ -97,7 +115,7 @@
 
     <!--  CPU Bound Multi  -->
     <Label
-      Grid.Row="0"
+      Grid.Row="1"
       Grid.Column="2"
       HorizontalAlignment="Center"
       VerticalAlignment="Center"
@@ -106,7 +124,7 @@
       FontWeight="Bold" />
     <Button
       x:Name="BtnCalculateMulti"
-      Grid.Row="1"
+      Grid.Row="2"
       Grid.Column="2"
       Width="160"
       Height="30"
@@ -114,7 +132,7 @@
       Content="CalculateMulti" />
     <Button
       x:Name="BtnCalculateMultiAsync"
-      Grid.Row="2"
+      Grid.Row="3"
       Grid.Column="2"
       Width="160"
       Height="30"
@@ -122,7 +140,7 @@
       Content="Calculate Multi Async" />
     <Button
       x:Name="BtnCancelTask"
-      Grid.Row="3"
+      Grid.Row="4"
       Grid.Column="2"
       Width="160"
       Height="30"
@@ -131,7 +149,7 @@
 
     <!--  CPU Bound Parallel  -->
     <Label
-      Grid.Row="0"
+      Grid.Row="1"
       Grid.Column="3"
       HorizontalAlignment="Center"
       VerticalAlignment="Center"
@@ -140,7 +158,7 @@
       FontWeight="Bold" />
     <Button
       x:Name="BtnCalculateParallel2"
-      Grid.Row="2"
+      Grid.Row="3"
       Grid.Column="3"
       Width="160"
       Height="30"
@@ -148,7 +166,7 @@
       Content="Calculate Parallel" />
     <Button
       x:Name="BtnCanceleParallel"
-      Grid.Row="3"
+      Grid.Row="4"
       Grid.Column="3"
       Width="160"
       Height="30"
@@ -158,7 +176,7 @@
     <!--  ProgressBar  -->
     <ProgressBar
       x:Name="Progress"
-      Grid.Row="4"
+      Grid.Row="5"
       Grid.Column="0"
       Grid.ColumnSpan="4"
       Height="20"
@@ -170,12 +188,23 @@
     <!--  Result  -->
     <TextBlock
       x:Name="ResultOutput"
-      Grid.Row="4"
+      Grid.Row="5"
       Grid.Column="0"
-      Grid.ColumnSpan="4"
+      Grid.ColumnSpan="2"
       Height="20"
       Margin="10,10,10,10"
-      Text="Binding {ResultOutput}"
+      Text="{Binding ResultOutput}"
+      Visibility="{Binding IsResultVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+
+    <!--  ResultElapsedTime  -->
+    <TextBlock
+      x:Name="ResultElapsedTime"
+      Grid.Row="5"
+      Grid.Column="2"
+      Grid.ColumnSpan="2"
+      Height="20"
+      Margin="10,10,10,10"
+      Text="{Binding ResultElapsedTime}"
       Visibility="{Binding IsResultVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
   </Grid>
 </Window>

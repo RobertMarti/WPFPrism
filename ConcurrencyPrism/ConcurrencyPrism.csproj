@@ -79,6 +79,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Infrastructure\AwaitableDelegateCommand\AwaitableDelegateCommand.cs" />
+    <Compile Include="Infrastructure\AwaitableDelegateCommand\CommandExtensions.cs" />
+    <Compile Include="Infrastructure\AwaitableDelegateCommand\IAsyncCommand.cs" />
     <Compile Include="ViewModels\Designer\DesignConcurrencyViewModel.cs" />
     <Compile Include="ViewModels\ConcurrencyViewModel.cs" />
     <Compile Include="ViewModels\IConcurrencyViewModel.cs" />

@@ -1,23 +1,30 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Input;
+using ConcurrencyPrism.Infrastructure;
+using ConcurrencyPrism.Infrastructure.AwaitableDelegateCommand;
 using Prism.Commands;
 
 namespace ConcurrencyPrism.ViewModels
 {
   public interface IConcurrencyViewModel
   {
-    ICommand CalculateAsyncCommand { get; }
-    ICommand CalculateCommand { get; }
-    ICommand CalculateMultiAsyncCommand { get; }
-    ICommand CalculateMultiCommand { get; }
-    ICommand CancelTaskCommand { get; }
-    ICommand GetHtmlAsync2Command { get; }
-    ICommand GetHtmlAsyncCommand { get; }
-    ICommand GetHtmlCommand { get; }
-    ICommand CalculateParallelCommand { get; }
-    ICommand CancelParallelCommand { get; }
-    
-      
+    int Anzahl { get; set; }  
+
+    AwaitableDelegateCommand CalculateAsyncCommand { get; }
+    DelegateCommand CalculateCommand { get; }
+    AwaitableDelegateCommand CalculateMultiAsyncCommand { get; }
+    DelegateCommand CalculateMultiCommand { get; }
+    DelegateCommand CancelTaskCommand { get; }
+    DelegateCommand GetHtmlAsync2Command { get; }
+    DelegateCommand GetHtmlAsyncCommand { get; }
+    DelegateCommand GetHtmlCommand { get; }
+    AwaitableDelegateCommand CalculateParallelCommand { get; }
+    DelegateCommand CancelParallelCommand { get; }
+   
+    string ResultOutput { get; set; }
+    string ResultElapsedTime { get; set; }
+
+    bool IsResultVisible { get; set; }
     bool IsProgressBarVisible { get; set; }
   }
 }
