@@ -9,7 +9,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using Prism.Commands;
 
-//Master
+//BranchTest2
 
 namespace UnitTestProject1
 {
