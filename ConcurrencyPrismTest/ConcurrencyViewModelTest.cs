@@ -59,6 +59,7 @@ namespace UnitTestProject1
     }
 
     [Test]
+    [TestCase(1)]
     [TestCase(3)]
     [TestCase(6)]
     [TestCase(10)]
@@ -93,20 +94,6 @@ namespace UnitTestProject1
 
     #region Exception Tests
 
-    //[Test]
-    //public void GetExceptionShouldThrowException()
-    //{
-    //  Action act = () => _testee.Exception();
-
-    //  act.Should().Throw<Exception>();
-    //}
-
-    //[Test]
-    //public void GetExceptionShouldThrowExceptionAsync()
-    //{
-    //  Func<Task> func = async () => await _testee.ExceptionAsync();
-    //  func.Should().Throw<Exception>();
-    //}
 
     #endregion
 
