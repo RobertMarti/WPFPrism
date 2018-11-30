@@ -9,6 +9,9 @@ using FluentAssertions;
 using NUnit.Framework;
 using Prism.Commands;
 
+
+//Master
+
 namespace UnitTestProject1
 {
   [TestFixture]
@@ -23,7 +26,7 @@ namespace UnitTestProject1
       _testee = new ConcurrencyViewModel();
     }
 
-    #region Function Tests
+    #region CalculateMulti Tests
 
     [Test]
     public void CalculateMultiShouldReturnSquares()
@@ -36,8 +39,12 @@ namespace UnitTestProject1
       _testee.ResultOutput.Should().Be(GetSquares(0, 9));
     }
 
+    #endregion
+
+    #region CalculateMultiAsync Tests
+
     [Test]
-    public async Task CalculateParallelShouldReturnSquares()
+    public async Task CalculateMultiAsyncShouldReturnSquares()
     {
       _testee.Anzahl = 10;
 
@@ -48,7 +55,7 @@ namespace UnitTestProject1
     }
 
     [Test]
-    public async Task CalculateParallelResultShouldBeVisible()
+    public async Task CalculateMultiAsyncResultShouldBeVisible()
     {
       _testee.Anzahl = 3;
 
@@ -64,7 +71,7 @@ namespace UnitTestProject1
     [TestCase(3)]
     [TestCase(6)]
     [TestCase(10)]
-    public async Task CalculateParallelShouldReturnSquares(int anzahl)
+    public async Task CalculateMultiAsyncShouldReturnSquares(int anzahl)
     {
       _testee.Anzahl = anzahl;
 
@@ -72,6 +79,24 @@ namespace UnitTestProject1
       await command.ExecuteAsync(null);
 
       _testee.ResultOutput.Should().Be(GetSquares(0, anzahl-1));
+    }
+
+    #endregion
+
+    #region CalculateParallelWhenAll Tests
+
+    [Test]
+    [TestCase(1)]
+    [TestCase(3)]
+    [TestCase(10)]
+    public async Task TaskCalculateParallelWhenAllShouldReturnSquares(int anzahl)
+    {
+      _testee.Anzahl = anzahl;
+
+      AwaitableDelegateCommand command = _testee.CalculateParallelWhenAllCommand;
+      await command.ExecuteAsync(null);
+
+      _testee.ResultOutput.Should().Be(GetSquares(0, anzahl - 1));
     }
 
     #endregion
@@ -86,7 +111,7 @@ namespace UnitTestProject1
       await _testee.CalculateMultiAsyncCommand.ExecuteAsync(null);
 
       //Funktioniert nicht, da wegen dem await (anderer Thread) gar nie gecanceled wird
-      _testee.CancelParallelCommand.Execute();
+      _testee.CancelParallelForEachCommand.Execute();
       
       _testee.ResultOutput.Should().Be("Calculation Cancelled");
     }

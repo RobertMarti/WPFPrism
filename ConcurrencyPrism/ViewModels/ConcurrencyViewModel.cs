@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ConcurrencyPrism.Infrastructure.AwaitableDelegateCommand;
+using Prism.Commands;
+using Prism.Mvvm;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,11 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Input;
-using ConcurrencyPrism.Infrastructure;
-using ConcurrencyPrism.Infrastructure.AwaitableDelegateCommand;
-using Prism.Commands;
-using Prism.Mvvm;
 
 //using Prism.Commands;
 
@@ -82,9 +80,9 @@ namespace ConcurrencyPrism.ViewModels
     public DelegateCommand CalculateMultiCommand { get; }
     public AwaitableDelegateCommand CalculateMultiAsyncCommand { get; }
     public DelegateCommand CancelTaskCommand { get; }
-    public AwaitableDelegateCommand CalculateParallelCommand { get; }
-    public DelegateCommand CancelParallelCommand { get; }
-    int IConcurrencyViewModel.Anzahl { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public AwaitableDelegateCommand CalculateParallelForEachCommand { get; }
+    public DelegateCommand CancelParallelForEachCommand { get; }
+    public AwaitableDelegateCommand CalculateParallelWhenAllCommand { get; }
 
     #endregion
 
@@ -99,8 +97,9 @@ namespace ConcurrencyPrism.ViewModels
       CalculateMultiCommand = new DelegateCommand(CalculateMulti);
       CalculateMultiAsyncCommand = new AwaitableDelegateCommand(CalculateMultiAsync);
       CancelTaskCommand = new DelegateCommand(CancelTasks);
-      CalculateParallelCommand = new AwaitableDelegateCommand(CalculateParallelAsync);
-      CancelParallelCommand = new DelegateCommand(CancelParallel);
+      CalculateParallelForEachCommand = new AwaitableDelegateCommand(CalculateParallelForEachAsync);
+      CancelParallelForEachCommand = new DelegateCommand(CancelParallel);
+      CalculateParallelWhenAllCommand = new AwaitableDelegateCommand(CalculateParallelWhenAllAsync);
 
       IsProgressBarVisible = false;
       IsResultVisible = false;
@@ -156,6 +155,11 @@ namespace ConcurrencyPrism.ViewModels
 
       MessageBox.Show(nSquare.ToString());
     }
+
+    //private int Calculate(int n)
+    //{
+    //  return n* n;
+    //}
 
     private async Task CalculateAsync()
     {
@@ -281,9 +285,9 @@ namespace ConcurrencyPrism.ViewModels
 
     #endregion
 
-    #region CPU Bound Parallel
+    #region CPU Bound Parallel ForEach
 
-    private async Task CalculateParallelAsync()
+    private async Task CalculateParallelForEachAsync()
     {
       StartCalculation();
 
@@ -353,6 +357,33 @@ namespace ConcurrencyPrism.ViewModels
       }
       public int Key { get; set; }
       public int Square { get; set; }
+    }
+
+    #endregion
+
+    #region CPU Bound Parallel WhenAll
+
+    private async Task CalculateParallelWhenAllAsync()
+    {
+      StartCalculation();
+
+      Task<int> task1 = Calculate(1);
+      Task<int> task2 = Calculate(2);
+      Task<int> task3 = Calculate(3);
+
+      int[] results = await Task.WhenAll(task1, task2, task3);
+
+      //Action action = () => Parallel.ForEach(results, new ParallelOptions(), CalculateParallel);
+      //ProvideCancellation();
+
+      ////Aktion in Threadpool ausführen,m damit der UI-Thread nicht blockiert wird
+      //Task task = Task.Run(action, _cancellationToken);
+      //await task;
+
+      if (!_cancellationToken.IsCancellationRequested)
+      {
+        EndCalculation(results.ToList());
+      }
     }
 
     #endregion

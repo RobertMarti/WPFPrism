@@ -9,7 +9,7 @@
   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
   xmlns:mvvm="http://prismlibrary.com/"
   Title="Concurrency"
-  Width="800"
+  Width="1000"
   Height="400"
   d:DataContext="{d:DesignInstance designer:DesignConcurrencyViewModel,
                                    IsDesignTimeCreatable=True}"
@@ -34,20 +34,26 @@
       <ColumnDefinition />
       <ColumnDefinition />
       <ColumnDefinition />
+      <ColumnDefinition />
     </Grid.ColumnDefinitions>
 
     <Label
       Grid.Row="0"
       Grid.Column="0"
+      Width="49"
+      Margin="0,18"
       HorizontalAlignment="Left"
       VerticalAlignment="Center"
       Content="Anzahl"
-      FontSize="12" />
+      FontSize="12"
+      FontWeight="Bold" />
 
     <TextBox
       x:Name="Anzahl"
       Grid.Row="0"
       Grid.Column="1"
+      Width="50"
+      Margin="0,22"
       HorizontalAlignment="Left"
       VerticalAlignment="Center"
       FontSize="12"
@@ -147,7 +153,7 @@
       Command="{Binding CancelTaskCommand}"
       Content="Cancel Tasks" />
 
-    <!--  CPU Bound Parallel  -->
+    <!--  CPU Bound Parallel ForEach  -->
     <Label
       Grid.Row="1"
       Grid.Column="3"
@@ -157,20 +163,46 @@
       FontSize="20"
       FontWeight="Bold" />
     <Button
-      x:Name="BtnCalculateParallel2"
+      x:Name="BtnCalculateParallel"
       Grid.Row="3"
       Grid.Column="3"
       Width="160"
       Height="30"
-      Command="{Binding CalculateParallelCommand}"
+      Command="{Binding CalculateParallelForEachCommand}"
       Content="Calculate Parallel" />
     <Button
-      x:Name="BtnCanceleParallel"
+      x:Name="BtnCancelParallel"
       Grid.Row="4"
       Grid.Column="3"
       Width="160"
       Height="30"
-      Command="{Binding CancelParallelCommand}"
+      Command="{Binding CancelParallelForEachCommand}"
+      Content="Cancel Parallel" />
+
+    <!--  CPU Bound Parallel  -->
+    <Label
+      Grid.Row="1"
+      Grid.Column="4"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center"
+      Content="CPU Bound Parallel"
+      FontSize="20"
+      FontWeight="Bold" />
+    <Button
+      x:Name="BtnCalculateParallel3"
+      Grid.Row="3"
+      Grid.Column="4"
+      Width="160"
+      Height="30"
+      Command="{Binding CalculateParallelForEachCommand}"
+      Content="Calculate Parallel" />
+    <Button
+      x:Name="BtnCanceleParallel4"
+      Grid.Row="4"
+      Grid.Column="4"
+      Width="160"
+      Height="30"
+      Command="{Binding CancelParallelForEachCommand}"
       Content="Cancel Parallel" />
 
     <!--  ProgressBar  -->
@@ -193,6 +225,7 @@
       Grid.ColumnSpan="2"
       Height="20"
       Margin="10,10,10,10"
+      FontWeight="Bold"
       Text="{Binding ResultOutput}"
       Visibility="{Binding IsResultVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
 
@@ -204,6 +237,7 @@
       Grid.ColumnSpan="2"
       Height="20"
       Margin="10,10,10,10"
+      FontWeight="Bold"
       Text="{Binding ResultElapsedTime}"
       Visibility="{Binding IsResultVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
   </Grid>
