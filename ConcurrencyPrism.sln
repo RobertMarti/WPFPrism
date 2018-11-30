@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrencyPrism", "Concurr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConcurrencyPrismTest", "ConcurrencyPrismTest\ConcurrencyPrismTest.csproj", "{68748CA5-34FC-4257-B1AF-6D4231C60BB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitPlayground", "GitPlayground\GitPlayground.csproj", "{23DA032E-CE20-4327-8F4D-63460B6A14F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{68748CA5-34FC-4257-B1AF-6D4231C60BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68748CA5-34FC-4257-B1AF-6D4231C60BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68748CA5-34FC-4257-B1AF-6D4231C60BB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23DA032E-CE20-4327-8F4D-63460B6A14F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23DA032E-CE20-4327-8F4D-63460B6A14F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23DA032E-CE20-4327-8F4D-63460B6A14F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23DA032E-CE20-4327-8F4D-63460B6A14F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

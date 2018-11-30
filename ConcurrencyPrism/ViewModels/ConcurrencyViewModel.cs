@@ -367,11 +367,13 @@ namespace ConcurrencyPrism.ViewModels
     {
       StartCalculation();
 
-      Task<int> task1 = Calculate(1);
-      Task<int> task2 = Calculate(2);
-      Task<int> task3 = Calculate(3);
+      var tasks = new List<Task<int>>();
+      for (var n = 0; n < Anzahl; n++)
+      {
+        tasks.Add(CalculateAsync(n));
+      }
 
-      int[] results = await Task.WhenAll(task1, task2, task3);
+      int[] results = await Task.WhenAll(tasks);
 
       //Action action = () => Parallel.ForEach(results, new ParallelOptions(), CalculateParallel);
       //ProvideCancellation();
@@ -384,6 +386,29 @@ namespace ConcurrencyPrism.ViewModels
       {
         EndCalculation(results.ToList());
       }
+    }
+
+    private async Task<int> CalculateAsync(int n)
+    {
+      await Task.Delay(1);
+
+      //Lange Rechenoparation: ca 1 Sekunden
+      for (int i = 0; i < 100000; i++)
+      {
+        for (int j = 0; j < 3000; j++)
+        {
+          //_cancellationToken[n].ThrowIfCancellationRequested(); -- gibt Exceptions ???
+
+          if (_cancellationTokens != null)
+          {
+            if (_cancellationTokens[n].IsCancellationRequested) return -1;
+          }
+
+          int z = i * j;
+        }
+      }
+
+      return n * n;
     }
 
     #endregion
