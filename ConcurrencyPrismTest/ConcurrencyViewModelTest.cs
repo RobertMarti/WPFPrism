@@ -9,8 +9,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using Prism.Commands;
 
-//Master
-
 namespace UnitTestProject1
 {
   [TestFixture]
