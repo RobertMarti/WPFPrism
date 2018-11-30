@@ -18,8 +18,8 @@ namespace ConcurrencyPrism.ViewModels
     DelegateCommand GetHtmlAsync2Command { get; }
     DelegateCommand GetHtmlAsyncCommand { get; }
     DelegateCommand GetHtmlCommand { get; }
-    AwaitableDelegateCommand CalculateParallelCommand { get; }
-    DelegateCommand CancelParallelCommand { get; }
+    AwaitableDelegateCommand CalculateParallelForEachCommand { get; }
+    DelegateCommand CancelParallelForEachCommand { get; }
    
     string ResultOutput { get; set; }
     string ResultElapsedTime { get; set; }
