@@ -60,6 +60,7 @@ namespace UnitTestProject1
 
     [Test]
     [TestCase(1)]
+    [TestCase(2)]
     [TestCase(3)]
     [TestCase(6)]
     [TestCase(10)]
