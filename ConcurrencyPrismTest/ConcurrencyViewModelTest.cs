@@ -48,12 +48,12 @@ namespace UnitTestProject1
     }
 
     [Test]
-    public void CalculateParallelResultShouldBeVisible()
+    public async Task CalculateParallelResultShouldBeVisible()
     {
       _testee.Anzahl = 3;
 
-      AwaitableDelegateCommand command = _testee.CalculateParallelCommand;
-      command?.Execute(null);
+      AwaitableDelegateCommand command = _testee.CalculateMultiAsyncCommand;
+      await command.ExecuteAsync(null);
 
       _testee.IsResultVisible.Should().Be(true);
     }
@@ -79,7 +79,7 @@ namespace UnitTestProject1
     [Test]
     public async Task CancelCommandShouldCancelCalculation()
     {
-      _testee.Anzahl = 10;
+      _testee.Anzahl = 3;
 
       await _testee.CalculateMultiAsyncCommand.ExecuteAsync(null);
 
