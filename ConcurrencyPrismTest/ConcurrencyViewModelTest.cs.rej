@@ -1,0 +1,10 @@
+diff a/ConcurrencyPrismTest/ConcurrencyViewModelTest.cs b/ConcurrencyPrismTest/ConcurrencyViewModelTest.cs	(rejected hunks)
+@@ -9,6 +9,8 @@
+ using NUnit.Framework;
+ using Prism.Commands;
+ 
++//BranchTest2
++
+ namespace UnitTestProject1
+ {
+   [TestFixture]

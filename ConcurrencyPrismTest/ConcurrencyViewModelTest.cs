@@ -9,6 +9,8 @@ using FluentAssertions;
 using NUnit.Framework;
 using Prism.Commands;
 
+//BranchTest2
+
 namespace UnitTestProject1
 {
   [TestFixture]
@@ -60,6 +62,7 @@ namespace UnitTestProject1
 
     [Test]
     [TestCase(1)]
+    [TestCase(2)]
     [TestCase(3)]
     [TestCase(6)]
     [TestCase(10)]
