@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GitPlayground
 {
-    public class Class1
+    public class Git1
     {
     }
 }
