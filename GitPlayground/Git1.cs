@@ -8,5 +8,8 @@ namespace GitPlayground
 {
     public class Git1
     {
+      private void DoGit2()
+      {
+      }
     }
 }
