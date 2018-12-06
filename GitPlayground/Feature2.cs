@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace GitPlayground
 {
-    public class Git1
+  class Feature2
+  {
+    public Feature2()
     {
-      private void DoGit()
-      {
-      }
+      //Feature2 modified
     }
+  }
 }
