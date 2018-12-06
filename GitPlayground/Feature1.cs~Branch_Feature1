@@ -10,7 +10,7 @@ namespace GitPlayground
   {
     public Feature1()
     {
-      var n = 1;
+      //Feature1 modified
     }
   }
 }
